@@ -1,0 +1,9 @@
+*pycache*
+*.md
+data
+models
+img
+*.ipynb
+LICENSE
+.idea
+main.py
