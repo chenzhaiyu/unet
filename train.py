@@ -1,14 +1,10 @@
 from model import *
 from data import *
+from config import config
 
 IS_DATA_AUG = False
 USE_MODEL = "last"
 
-config = {
-    "validation_steps": 50,
-    "steps_epoch": 1000,
-    "epochs": 10,
-}
 
 if IS_DATA_AUG:
     data_gen_args = dict(rotation_range=0.2,
