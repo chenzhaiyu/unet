@@ -10,6 +10,9 @@ from keras import backend as keras
 
 
 def unet(pretrained_weights=None, input_size=(512, 512, 3)):
+    """
+    UNet model for RGB images.
+    """
     inputs = Input(input_size)
     conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(inputs)
     conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv1)
@@ -64,3 +67,35 @@ def unet(pretrained_weights=None, input_size=(512, 512, 3)):
         model.load_weights(pretrained_weights)
 
     return model
+
+
+def find_last(model_dir):
+    """Finds the last checkpoint file of the last trained model in the
+    model directory.
+    Returns:
+        The path of the last checkpoint file and its epoch number
+    """
+
+    if not model_dir:
+        import errno
+        raise FileNotFoundError(
+            errno.ENOENT,
+            "Could not find model directory under {}".format(model_dir))
+
+    # Find models under model_dir and sort them
+    model_names = sorted(os.listdir(model_dir))
+
+    # Find the last checkpoint
+    last_model_path = os.path.join(model_dir, model_names[-1])
+
+    if not last_model_path:
+        import errno
+        raise FileNotFoundError(
+            errno.ENOENT, "Could not find weight files in {}".format(last_model_path))
+
+    print(len(last_model_path))
+    assert len(last_model_path) == 42
+    epoch = int(last_model_path[-12:-10])
+
+    print("loading weights from " + last_model_path)
+    return last_model_path, epoch
