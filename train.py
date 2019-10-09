@@ -1,6 +1,6 @@
 from model import *
 from data import *
-from config import config
+from config import train_config, data_aug_config
 
 IS_DATA_AUG = False
 USE_MODEL = "last"
@@ -8,20 +8,14 @@ MODEL_DIR = "models"
 
 
 if IS_DATA_AUG:
-    data_gen_args = dict(rotation_range=0.2,
-                         width_shift_range=0.05,
-                         height_shift_range=0.05,
-                         shear_range=0.05,
-                         zoom_range=0.05,
-                         horizontal_flip=True,
-                         fill_mode='nearest')
+    data_gen_args = data_aug_config
 else:
     data_gen_args = None
 
-trainGene = trainGenerator(2, '/home/zhaiyu/Dataset/WHU Building Dataset/train',
+trainGene = trainGenerator(train_config["batch_size"], '/home/zhaiyu/Dataset/WHU Building Dataset/train',
                            'images', 'masks', data_gen_args, save_to_dir=None)
 
-valGene = valGenerator(2, "/home/zhaiyu/Dataset/WHU Building Dataset/val",
+valGene = valGenerator(train_config["batch_size"], "/home/zhaiyu/Dataset/WHU Building Dataset/val",
                        'images', "masks", data_gen_args, save_to_dir=None)
 
 model = unet()
@@ -35,8 +29,8 @@ if USE_MODEL == "last":
     last_model_path, initial_epoch = find_last(MODEL_DIR)
     model.load_weights(last_model_path, by_name=True)
 
-model.fit_generator(trainGene, validation_data=valGene, validation_steps=config["validation_steps"],
-                    steps_per_epoch=config["steps_epoch"], epochs=config["epochs"], callbacks=[model_checkpoint],
+model.fit_generator(trainGene, validation_data=valGene, validation_steps=train_config["validation_steps"],
+                    steps_per_epoch=train_config["steps_epoch"], epochs=train_config["epochs"], callbacks=[model_checkpoint],
                     initial_epoch=initial_epoch)
 
 
