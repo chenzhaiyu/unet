@@ -3,7 +3,7 @@ from data import *
 from config import train_config, data_aug_config
 
 IS_DATA_AUG = False
-USE_MODEL = "last"
+MODEL_NAME = "last"
 MODEL_DIR = "models"
 
 
@@ -24,14 +24,20 @@ model_checkpoint = ModelCheckpoint('models/unet_buildings_weights.{epoch:02d}-{v
 
 initial_epoch = 0
 
-if USE_MODEL == "last":
+if MODEL_NAME == "last":
     # Load the last model you trained and continue training
     last_model_path, initial_epoch = find_last(MODEL_DIR)
     model.load_weights(last_model_path, by_name=True)
 
+elif isinstance(MODEL_NAME, str) and MODEL_NAME != "last":
+    model.load_weights(os.path.join(MODEL_DIR, MODEL_NAME), by_name=True)
+
+else:
+    raise NotImplementedError
+
 model.fit_generator(trainGene, validation_data=valGene, validation_steps=train_config["validation_steps"],
-                    steps_per_epoch=train_config["steps_epoch"], epochs=train_config["epochs"], callbacks=[model_checkpoint],
-                    initial_epoch=initial_epoch)
+                    steps_per_epoch=train_config["steps_epoch"], epochs=train_config["epochs"],
+                    callbacks=[model_checkpoint], initial_epoch=initial_epoch)
 
 
 # # Test trained model
