@@ -3,7 +3,7 @@ from data import *
 from config import train_config, data_aug_config
 
 IS_DATA_AUG = False
-MODEL_NAME = "last"
+MODEL_NAME = None  # can be chosen from [None, "model_filename", "last"]
 MODEL_DIR = "models"
 
 
@@ -30,7 +30,11 @@ if MODEL_NAME == "last":
     model.load_weights(last_model_path, by_name=True)
 
 elif isinstance(MODEL_NAME, str) and MODEL_NAME != "last":
+    print("loading weights from {}".format(MODEL_NAME))
     model.load_weights(os.path.join(MODEL_DIR, MODEL_NAME), by_name=True)
+
+elif MODEL_NAME is None:
+    print("training model from scratch")
 
 else:
     raise NotImplementedError
@@ -38,7 +42,6 @@ else:
 model.fit_generator(trainGene, validation_data=valGene, validation_steps=train_config["validation_steps"],
                     steps_per_epoch=train_config["steps_epoch"], epochs=train_config["epochs"],
                     callbacks=[model_checkpoint], initial_epoch=initial_epoch)
-
 
 # # Test trained model
 # testGene = testGenerator("data/whu/test", as_gray=False, flag_multi_class=True)
