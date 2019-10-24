@@ -1,10 +1,11 @@
 from model import *
 from data import *
+from config import test_config
 
 model = unet()
 
-model.load_weights("models/unet_buildings_weights.14-0.04.hdf5", by_name=True)
+model.load_weights(test_config["weights_path"], by_name=True)
 
-testGene = testGenerator("data/whu/test", as_gray=False, flag_multi_class=True)
+testGene = testGenerator(test_config["test_data_dir"], as_gray=False, flag_multi_class=True)
 results = model.predict_generator(testGene, 100, verbose=1)
-saveResult("data/whu/result", results)
+saveResult(test_config["save_dir"], results)

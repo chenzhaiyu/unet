@@ -3,8 +3,15 @@ train_config = {
     "steps_epoch": 1000,
     "epochs": 20,
     "batch_size": 2,
-    "train_data_path": "D:/Datasets/WHU Building Dataset/train",
-    "val_data_path": "D:/Datasets/WHU Building Dataset/val"
+    "weights_dir": "models",
+    "train_data_dir": "D:/Datasets/WHU Building Dataset/train",
+    "val_data_dir": "D:/Datasets/WHU Building Dataset/val"
+}
+
+test_config = {
+    "weights_path": "models/unet_buildings_weights.14-0.04.hdf5",
+    "test_data_dir": "D:/Datasets/WHU Building Dataset/test",
+    "save_dir": "data/whu/result"
 }
 
 data_aug_config = dict(rotation_range=0.2,

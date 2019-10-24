@@ -4,7 +4,6 @@ from config import train_config, data_aug_config
 
 IS_DATA_AUG = False
 MODEL_NAME = None  # can be chosen from [None, "model_filename", "last"]
-MODEL_DIR = "models"
 
 
 if IS_DATA_AUG:
@@ -12,26 +11,27 @@ if IS_DATA_AUG:
 else:
     data_gen_args = None
 
-trainGene = trainGenerator(train_config["batch_size"], train_config["train_data_path"],
+trainGene = trainGenerator(train_config["batch_size"], train_config["train_data_dir"],
                            'images', 'masks', data_gen_args, save_to_dir=None)
 
-valGene = valGenerator(train_config["batch_size"], train_config["val_data_path"],
+valGene = valGenerator(train_config["batch_size"], train_config["val_data_dir"],
                        'images', "masks", data_gen_args, save_to_dir=None)
 
 model = unet()
-model_checkpoint = ModelCheckpoint('models/unet_buildings_weights.{epoch:02d}-{val_loss:.2f}.hdf5', monitor='loss',
-                                   verbose=1, save_best_only=False)
+model_checkpoint = ModelCheckpoint(os.path.join(train_config["weights_dir"],
+                                                'models/unet_buildings_weights.{epoch:02d}-{val_loss:.2f}.hdf5'),
+                                   monitor='loss', verbose=1, save_best_only=False)
 
 initial_epoch = 0
 
 if MODEL_NAME == "last":
     # Load the last model you trained and continue training
-    last_model_path, initial_epoch = find_last(MODEL_DIR)
+    last_model_path, initial_epoch = find_last(train_config["weights_dir"])
     model.load_weights(last_model_path, by_name=True)
 
 elif isinstance(MODEL_NAME, str) and MODEL_NAME != "last":
     print("loading weights from {}".format(MODEL_NAME))
-    model.load_weights(os.path.join(MODEL_DIR, MODEL_NAME), by_name=True)
+    model.load_weights(os.path.join(train_config["weights_dir"], MODEL_NAME), by_name=True)
 
 elif MODEL_NAME is None:
     print("training model from scratch")
