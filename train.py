@@ -12,10 +12,10 @@ if IS_DATA_AUG:
 else:
     data_gen_args = None
 
-trainGene = trainGenerator(train_config["batch_size"], '/home/zhaiyu/Dataset/WHU Building Dataset/train',
+trainGene = trainGenerator(train_config["batch_size"], train_config["train_data_path"],
                            'images', 'masks', data_gen_args, save_to_dir=None)
 
-valGene = valGenerator(train_config["batch_size"], "/home/zhaiyu/Dataset/WHU Building Dataset/val",
+valGene = valGenerator(train_config["batch_size"], train_config["val_data_path"],
                        'images', "masks", data_gen_args, save_to_dir=None)
 
 model = unet()
@@ -43,7 +43,3 @@ model.fit_generator(trainGene, validation_data=valGene, validation_steps=train_c
                     steps_per_epoch=train_config["steps_epoch"], epochs=train_config["epochs"],
                     callbacks=[model_checkpoint], initial_epoch=initial_epoch)
 
-# # Test trained model
-# testGene = testGenerator("data/whu/test", as_gray=False, flag_multi_class=True)
-# results = model.predict_generator(testGene, 100, verbose=1)
-# saveResult("data/whu/result", results)
