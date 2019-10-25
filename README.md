@@ -8,9 +8,7 @@ The following dependencies are needed:
 
 * Numpy
 * Tensorflow-gpu
-
 * Keras
-
 * Scikit-image
 
 ## Usage
