@@ -25,9 +25,15 @@ conda env create -f env.yml
 
 ## Results
 
-![image](src/2_125.png)
 
-![prediction](src/2_125_predict.png)
+<p align="center">
+  <img width="512" src="src/2_125.png">
+</p>
 
-![gt](src/2_125_gt.png)
+<p align="center">
+  <img width="512" src="src/2_125_predict.png">
+</p>
 
+<p align="center">
+  <img width="512" src="src/2_125_gt.png">
+</p>
