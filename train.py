@@ -19,7 +19,7 @@ valGene = valGenerator(train_config["batch_size"], train_config["val_data_dir"],
 
 model = unet()
 model_checkpoint = ModelCheckpoint(os.path.join(train_config["weights_dir"],
-                                                'models/unet_buildings_weights.{epoch:02d}-{val_loss:.2f}.hdf5'),
+                                                'unet_buildings_weights.{epoch:02d}-{val_loss:.2f}.hdf5'),
                                    monitor='loss', verbose=1, save_best_only=False)
 
 initial_epoch = 0
